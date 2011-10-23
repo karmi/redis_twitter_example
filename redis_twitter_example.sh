@@ -15,6 +15,9 @@
 #     $ bash redis_twitter_example.sh
 #
 
+# <img src="http://github.com/favicon.ico" style="position:relative; top:2px">
+# The full source for this tutorial is available at <http://github.com/karmi/redis_twitter_example>.
+
 # ---------------------------------------------------------------------------------------
 
 # First, let's create some aliases for better code readability.
