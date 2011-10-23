@@ -148,6 +148,33 @@ ruby -e "
   end
 "
 
+# And finally, let A tweet something as well. We know the drill, now.
+#
+export message="$(t);Message from A"
++ "A publishes message '$message'"
+
+# We have to push the message to:
+
+# 1) the global timeline,
+#
+% LPUSH global:timeline "$message"
+
+# 2) A's own timeline,
+#
+% LPUSH users:A:timeline "$message"
+
+# 3) all A's followers timeline (empty in this case).
+#
+% SMEMBERS users:A:followers | \
+ruby -e "
+  followers = STDIN.read.split(\"\n\")
+  message   = ENV['message']
+
+  followers.each do |f|
+    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{message}'|
+  end
+"
+
 # Now would be the good time to display some tweets.
 
 # Let's display A's timeline, trimming it to 10 messages.
