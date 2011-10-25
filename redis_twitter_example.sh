@@ -86,7 +86,7 @@ function  + () { echo; echo -e "# \033[1m$@\033[0m"; for i in {1..60}; do echo -
 # We will store the published time and message body directly in the message
 # itself. In real world, we would just use JSON.
 #
-export message="$(t);Message from B"
+message="$(t);Message from B"
 + "B publishes message '$message'"
 
 
@@ -115,20 +115,14 @@ export message="$(t);Message from B"
 # Then, we have to iterate over this list, and push B's message
 # into the timeline of each user.
 #
-# We'll cheat here, and JUST USE RUBY, reading the list from standard input.
-#
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  message   = ENV['message']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{message}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$message"
+done
 
 # Now, let C tweet something, as well.
 #
-export message="$(t);Message from C"
+message="$(t);Message from C"
 + "C publishes message '$message'"
 
 # We have to run through the loop once again.
@@ -144,18 +138,14 @@ export message="$(t);Message from C"
 # 3) push the message to C's followers timelines
 #
 % SMEMBERS users:C:followers | \
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  message   = ENV['message']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{message}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$message"
+done
 
 # And finally, let A tweet something as well. We know the drill, now.
 #
-export message="$(t);Message from A"
+message="$(t);Message from A"
 + "A publishes message '$message'"
 
 # We have to push the message to:
@@ -171,14 +161,10 @@ export message="$(t);Message from A"
 # 3) all A's followers timeline (empty in this case).
 #
 % SMEMBERS users:A:followers | \
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  message   = ENV['message']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{message}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$message"
+done
 
 # Now would be the good time to display some tweets.
 
@@ -210,7 +196,7 @@ ruby -e "
 # does our “twitter” use now?
 #
 + "Memory usage:"
-% info | \grep "used_memory_human"
+% info | 'grep' "used_memory_human"
 
 # We can de-duplicate the messages by storing them by ID, and storing
 # only those IDs in user timelines, instead of full messages.
@@ -241,13 +227,13 @@ ruby -e "
 
 # Let B tweet something.
 #
-export message="$(t);Message from B"
+message="$(t);Message from B"
 
 # We will store every tweet in under a separate key, with unique ID.
 
 # Let's get a unique, “auto-incrementing” ID, saving it in a `$id` variable.
 #
-export id="$( % INCR tweets:next_id | tr -d " " )"
+id="$( % INCR tweets:next_id )"
 + "B publishes message '$message' with ID '$id'"
 
 # Let's store the message content under a key.
@@ -270,14 +256,10 @@ export id="$( % INCR tweets:next_id | tr -d " " )"
 # all B's followers timeline.
 #
 % SMEMBERS users:B:followers | \
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  id        = ENV['id']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{id}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$id"
+done
 
 # We should now have the tweet ID stored in relevant timelines.
 
@@ -291,23 +273,20 @@ ruby -e "
 # line client, but doable.
 #
 + "Global timeline (messages):"
-% LRANGE global:timeline 0 -1 | \
-xargs echo | \
 # We will simply replace every numeric ID with the corresponding key in the form `tweets:<ID>`...
-sed 's/\([0-9]\)/tweets:&/g' | \
-# ... and feed it to the `redis-cli`'s [`MGET`](http://redis.io/commands/mget) command.
-xargs redis-cli -n $db MGET
-
+tweet_ids=$( % LRANGE global:timeline 0 9 | sed 's/^/tweets:/' )
+# ... and feed it to the [`MGET`](http://redis.io/commands/mget) command.
+% MGET $tweet_ids
 
 # Now, let C tweet something, again.
 
 # Let's get some ID, again
 #
-export id="$( % INCR tweets:next_id | tr -d " " )"
+id="$( % INCR tweets:next_id )"
 
 # Let's store the message content under a key, again.
 #
-export message="$(t);Message from C"
+message="$(t);Message from C"
 + "C publishes message '$message' with ID '$id'"
 % SET tweets:$id "$message"
 
@@ -323,19 +302,15 @@ export message="$(t);Message from C"
 # all C's followers timeline.
 #
 % SMEMBERS users:C:followers | \
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  id        = ENV['id']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{id}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$id"
+done
 
 # And finally, let's repeat everything for A as well.
 #
-export id="$( % INCR tweets:next_id | tr -d " " )"
-export message="$(t);Message from A"
+id="$( % INCR tweets:next_id )"
+message="$(t);Message from A"
 + "A publishes message '$message' with ID '$id'"
 % SET tweets:$id "$message"
 
@@ -344,14 +319,10 @@ export message="$(t);Message from A"
 % LPUSH users:A:timeline $id
 
 % SMEMBERS users:A:followers | \
-ruby -e "
-  followers = STDIN.read.split(\"\n\")
-  id        = ENV['id']
-
-  followers.each do |f|
-    system %Q|redis-cli -n #{ENV['db']} LPUSH users:#{f}:timeline '#{id}'|
-  end
-"
+while read u
+do
+  % LPUSH users:$u:timeline "$id"
+done
 
 # Now would be the good time to display the timelines, again.
 
@@ -362,36 +333,28 @@ ruby -e "
 # A's timeline.
 #
 + "A's timeline:"
-% LRANGE users:A:timeline 0 9 | xargs echo | \
-  sed 's/\([0-9]\)/tweets:&/g' | \
-  xargs redis-cli -n $db MGET
+% MGET $( % LRANGE users:A:timeline 0 9 | sed 's/^/tweets:/' )
 
 # B's timeline.
 #
 + "B's timeline:"
-% LRANGE users:B:timeline 0 9 | xargs echo | \
-  sed 's/\([0-9]\)/tweets:&/g' | \
-  xargs redis-cli -n $db MGET
+% MGET $( % LRANGE users:B:timeline 0 9 | sed 's/^/tweets:/' )
 
 # C's timeline.
 #
 + "C's timeline:"
-% LRANGE users:C:timeline 0 9 | xargs echo | \
-  sed 's/\([0-9]\)/tweets:&/g' | \
-  xargs redis-cli -n $db MGET
+% MGET $( % LRANGE users:C:timeline 0 9 | sed 's/^/tweets:/' )
 
 # Global timeline.
 + "Global timeline:"
-% LRANGE global:timeline 0 9 | xargs echo | \
-  sed 's/\([0-9]\)/tweets:&/g' | \
-  xargs redis-cli -n $db MGET
+% MGET $( % LRANGE global:timeline 0 9 | sed 's/^/tweets:/' ) 
 
 # How does our RAM usage look now? You can see it's actually _larger_ then
 # in the previous case, most probably because we're using a larger pool
 # of keys now. There's no free lunch in computer science.
 #
 + "Memory usage:"
-% info | \grep "used_memory_human"
+% info | 'grep' "used_memory_human"
 
 # You may wonder, now, how we display the count of tweets for specific user,
 # for instance. Actually, there's no way to do that.
@@ -409,4 +372,3 @@ ruby -e "
 # to store them in an easily accessible set, sorted by timestamp.
 #
 # And that would certainly be a _very_ expensive set of operations.
-#
