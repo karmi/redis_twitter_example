@@ -9,3 +9,10 @@ Download or clone the repository and run:
     $ bash redis_twitter_example.sh
 
 The tutorial is also available for display at <http://karmi.github.com/redis_twitter_example/>.
+
+The accompanying slides are available at
+<http://slideshare.net/karmi/redis-the-ak47-of-postrelational-databases>.
+
+----
+
+<http://karmi.cz>
