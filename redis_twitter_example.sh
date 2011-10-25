@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ## Redis Twitter Example
 #
 ### An Executable Tutorial
