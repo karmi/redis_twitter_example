@@ -602,16 +602,27 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-48">&#182;</a>
         </div>
-        <p>OK, let&rsquo;s clear everything first.</p>
+        <hr>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% FLUSHDB</pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-49'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-49">&#182;</a>
+        </div>
+        <p>OK, let&rsquo;s clear everything first.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% FLUSHDB</pre></div>
+      </td>
+    </tr>
+    <tr id='section-50'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-50">&#182;</a>
         </div>
         <p>Now, let&rsquo;s add some users, again, this time in batch.</p>
       </td>
@@ -620,10 +631,10 @@ Let&rsquo;s have a shot at that.</p>
 % SADD users A B C</pre></div>
       </td>
     </tr>
-    <tr id='section-50'>
+    <tr id='section-51'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-50">&#182;</a>
+          <a class="pilcrow" href="#section-51">&#182;</a>
         </div>
         <p>Let&rsquo;s add the relationships:</p>
 
@@ -643,10 +654,10 @@ Let&rsquo;s have a shot at that.</p>
 % SADD users:B:followers C</pre></div>
       </td>
     </tr>
-    <tr id='section-51'>
+    <tr id='section-52'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-51">&#182;</a>
+          <a class="pilcrow" href="#section-52">&#182;</a>
         </div>
         <p>Let B tweet something, again.</p>
       </td>
@@ -654,10 +665,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from B&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-52'>
+    <tr id='section-53'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-52">&#182;</a>
+          <a class="pilcrow" href="#section-53">&#182;</a>
         </div>
         <p>We will store every tweet under a separate key, with a unique ID.</p>
       </td>
@@ -665,10 +676,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class='highlight'><pre></pre></div>
       </td>
     </tr>
-    <tr id='section-53'>
+    <tr id='section-54'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-53">&#182;</a>
+          <a class="pilcrow" href="#section-54">&#182;</a>
         </div>
         <p>We&rsquo;ll get a unique, “auto-incrementing” ID from <em>Redis</em>,
 saving it in a <code>$id</code> variable.</p>
@@ -678,10 +689,10 @@ saving it in a <code>$id</code> variable.</p>
 + <span class="s2">&quot;B publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-54'>
+    <tr id='section-55'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-54">&#182;</a>
+          <a class="pilcrow" href="#section-55">&#182;</a>
         </div>
         <p>Let&rsquo;s store the message content under a separate key, using the ID.</p>
       </td>
@@ -689,10 +700,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre>% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-55'>
+    <tr id='section-56'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-55">&#182;</a>
+          <a class="pilcrow" href="#section-56">&#182;</a>
         </div>
         <p>Can we get it back? Sure thing.</p>
       </td>
@@ -700,10 +711,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre>% GET tweets:1</pre></div>
       </td>
     </tr>
-    <tr id='section-56'>
+    <tr id='section-57'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-56">&#182;</a>
+          <a class="pilcrow" href="#section-57">&#182;</a>
         </div>
         <p>Now, we have to push the ID to all the timelines, as in the previous implementation:</p>
       </td>
@@ -711,10 +722,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre></pre></div>
       </td>
     </tr>
-    <tr id='section-57'>
+    <tr id='section-58'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-57">&#182;</a>
+          <a class="pilcrow" href="#section-58">&#182;</a>
         </div>
         <p>the global timeline,</p>
       </td>
@@ -722,10 +733,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
-    <tr id='section-58'>
+    <tr id='section-59'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-58">&#182;</a>
+          <a class="pilcrow" href="#section-59">&#182;</a>
         </div>
         <p>B&rsquo;s own timeline,</p>
       </td>
@@ -733,10 +744,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre>% LPUSH users:B:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
-    <tr id='section-59'>
+    <tr id='section-60'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-59">&#182;</a>
+          <a class="pilcrow" href="#section-60">&#182;</a>
         </div>
         <p>all the B&rsquo;s followers timelines.</p>
       </td>
@@ -747,10 +758,10 @@ saving it in a <code>$id</code> variable.</p>
 <span class="k">done</span></pre></div>
       </td>
     </tr>
-    <tr id='section-60'>
+    <tr id='section-61'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-60">&#182;</a>
+          <a class="pilcrow" href="#section-61">&#182;</a>
         </div>
         <p>We should now have the tweet ID stored in all relevant timelines.</p>
       </td>
@@ -758,10 +769,10 @@ saving it in a <code>$id</code> variable.</p>
         <div class='highlight'><pre></pre></div>
       </td>
     </tr>
-    <tr id='section-61'>
+    <tr id='section-62'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-61">&#182;</a>
+          <a class="pilcrow" href="#section-62">&#182;</a>
         </div>
         <p>Let&rsquo;s have a look at the global one:</p>
       </td>
@@ -770,10 +781,10 @@ saving it in a <code>$id</code> variable.</p>
 % LRANGE global:timeline 0 -1</pre></div>
       </td>
     </tr>
-    <tr id='section-62'>
+    <tr id='section-63'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-62">&#182;</a>
+          <a class="pilcrow" href="#section-63">&#182;</a>
         </div>
         <p>We get back only the IDs. When we want to retrieve the messages itself, we have
 to fetch them from the relevant keys:</p>
@@ -782,10 +793,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (messages):&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-63'>
+    <tr id='section-64'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-63">&#182;</a>
+          <a class="pilcrow" href="#section-64">&#182;</a>
         </div>
         <p>We will simply replace every numeric ID with the corresponding key in the form <code>tweets:&lt;ID&gt;</code>&hellip;</p>
       </td>
@@ -793,10 +804,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre><span class="nv">tweet_ids</span><span class="o">=</span><span class="k">$(</span> % LRANGE global:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-64'>
+    <tr id='section-65'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-64">&#182;</a>
+          <a class="pilcrow" href="#section-65">&#182;</a>
         </div>
         <p>&hellip; and feed it to the <a href="http://redis.io/commands/mget"><code>MGET</code></a> command.</p>
       </td>
@@ -804,10 +815,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre>% MGET <span class="nv">$tweet_ids</span></pre></div>
       </td>
     </tr>
-    <tr id='section-65'>
+    <tr id='section-66'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-65">&#182;</a>
+          <a class="pilcrow" href="#section-66">&#182;</a>
         </div>
         <p>Now, let C tweet something, again.</p>
       </td>
@@ -815,10 +826,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre></pre></div>
       </td>
     </tr>
-    <tr id='section-66'>
+    <tr id='section-67'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-66">&#182;</a>
+          <a class="pilcrow" href="#section-67">&#182;</a>
         </div>
         <p>We need to get some ID.</p>
       </td>
@@ -826,10 +837,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-67'>
+    <tr id='section-68'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-67">&#182;</a>
+          <a class="pilcrow" href="#section-68">&#182;</a>
         </div>
         <p>We&rsquo;ll store the message content under a separate key, again.</p>
       </td>
@@ -839,10 +850,10 @@ to fetch them from the relevant keys:</p>
 % SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-68'>
+    <tr id='section-69'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-68">&#182;</a>
+          <a class="pilcrow" href="#section-69">&#182;</a>
         </div>
         <p>Now, we have to push the ID to all the relevant timelines, again:</p>
       </td>
@@ -850,10 +861,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre></pre></div>
       </td>
     </tr>
-    <tr id='section-69'>
+    <tr id='section-70'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-69">&#182;</a>
+          <a class="pilcrow" href="#section-70">&#182;</a>
         </div>
         <p>the global timeline,</p>
       </td>
@@ -861,10 +872,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
-    <tr id='section-70'>
+    <tr id='section-71'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-70">&#182;</a>
+          <a class="pilcrow" href="#section-71">&#182;</a>
         </div>
         <p>C&rsquo;s own timeline,</p>
       </td>
@@ -872,10 +883,10 @@ to fetch them from the relevant keys:</p>
         <div class='highlight'><pre>% LPUSH users:C:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
-    <tr id='section-71'>
+    <tr id='section-72'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-71">&#182;</a>
+          <a class="pilcrow" href="#section-72">&#182;</a>
         </div>
         <p>and all the C&rsquo;s followers timelines.</p>
       </td>
@@ -886,10 +897,10 @@ to fetch them from the relevant keys:</p>
 <span class="k">done</span></pre></div>
       </td>
     </tr>
-    <tr id='section-72'>
+    <tr id='section-73'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-72">&#182;</a>
+          <a class="pilcrow" href="#section-73">&#182;</a>
         </div>
         <p>And finally, let&rsquo;s repeat everything for A as well:</p>
 
@@ -918,25 +929,12 @@ to fetch them from the relevant keys:</p>
 <span class="k">done</span></pre></div>
       </td>
     </tr>
-    <tr id='section-73'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-73">&#182;</a>
-        </div>
-        <p> Now would be a good time to display the timelines, again.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
     <tr id='section-74'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-74">&#182;</a>
         </div>
-        <p>Note, that we cannot simply pull messages from the timelines,
-since we are storing only IDs. We have to feed the fetched
-IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
+        <p> Now would be a good time to display the timelines, again.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -947,6 +945,19 @@ IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-75">&#182;</a>
         </div>
+        <p>Note, that we cannot simply pull messages from the timelines,
+since we are storing only IDs. We have to feed the fetched
+IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-76'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-76">&#182;</a>
+        </div>
         <p>A&rsquo;s timeline.</p>
       </td>
       <td class=code>
@@ -954,10 +965,10 @@ IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
 % MGET <span class="k">$(</span> % LRANGE users:A:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-76'>
+    <tr id='section-77'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-76">&#182;</a>
+          <a class="pilcrow" href="#section-77">&#182;</a>
         </div>
         <p>B&rsquo;s timeline.</p>
       </td>
@@ -966,10 +977,10 @@ IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
 % MGET <span class="k">$(</span> % LRANGE users:B:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-77'>
+    <tr id='section-78'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-77">&#182;</a>
+          <a class="pilcrow" href="#section-78">&#182;</a>
         </div>
         <p>C&rsquo;s timeline.</p>
       </td>
@@ -978,10 +989,10 @@ IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
 % MGET <span class="k">$(</span> % LRANGE users:C:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-78'>
+    <tr id='section-79'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-78">&#182;</a>
+          <a class="pilcrow" href="#section-79">&#182;</a>
         </div>
         <p>The global timeline.</p>
       </td>
@@ -990,10 +1001,10 @@ IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
 % MGET <span class="k">$(</span> % LRANGE global:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span> </pre></div>
       </td>
     </tr>
-    <tr id='section-79'>
+    <tr id='section-80'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-79">&#182;</a>
+          <a class="pilcrow" href="#section-80">&#182;</a>
         </div>
         <p>How does our RAM usage look now? You can see it&rsquo;s actually <em>larger</em> then
 in the previous case, most probably because we&rsquo;re using a slightly
@@ -1004,27 +1015,48 @@ larger pool of keys now. There&rsquo;s no free lunch in computer science.</p>
 % info | <span class="s1">&#39;grep&#39;</span> <span class="s2">&quot;used_memory_human&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-80'>
+    <tr id='section-81'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-80">&#182;</a>
+          <a class="pilcrow" href="#section-81">&#182;</a>
+        </div>
+        <hr>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-82'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-82">&#182;</a>
         </div>
         <p>You may wonder, now, how we display the count of tweets for specific user,
 for instance. Actually, there&rsquo;s no way to do that.</p>
 
-<p>One solution would be to continue with the “query-based” schema, and
+<p>One solution would be to continue with the simple “query-based” schema, and
 just keep track of counts manually, in a counter such as <code>users:A:tweets:count</code>.</p>
 
-<p>Another solution would be to use <a href="http://redis.io/commands#sorted_set"><em>sorted sets</em></a>
-for tweets, with one set per user, using timestamp as the score.</p>
+<p>Another solution would be to use a <a href="http://redis.io/commands#sorted_set"><em>sorted set</em></a>
+for user&rsquo;s timeline, one set per user, using timestamp as the score.</p>
 
-<p>But that would shift the perspective to “data-based” schema, and we would have to walk
-through all the sets of all the followers when displaying user&rsquo;s timeline, using
-<a href="http://redis.io/commands/zrevrangebyscore"><code>ZREVRANGEBYSCORE</code></a> to get a limited set of IDs,
-and then perform a <a href="http://redis.io/commands/zunionstore"><code>ZUNIONSTORE</code></a>
-to store them in an easily accessible set, sorted by timestamp.</p>
+<p>Naturally, we would want to keep the “query-based” perspective when modelling the
+data, so we would store the messages (or their IDS) in user “inboxes” anyway.
+If we&rsquo;d use sorted sets instead of lists, it would allow us interesting operations,
+such as intersections of their timelines, eg. “display timelines of all your followers”.</p>
 
-<p>And that would certainly be a <em>very</em> expensive set of operations.</p>
+<p>The thing to keep in mind at all times is that we don&rsquo;t have any efficient technique
+to query data based on <em>value</em>. There&rsquo;s no <code>SELECT &hellip; WHERE column = &lsquo;something&rsquo;</code>.</p>
+
+<p>As you may know, a “traditional database” uses and <em>index</em> on this column to be able
+to efficiently perform such a query, without doing a full table scan.</p>
+
+<p>In fact, those “de-normalized” data are just <em>indices</em> in the traditional database
+sense. We&rsquo;re managing these <em>indices</em> manually, and deciding upon their design and
+implementation ourselves. While absolutely transparent to us, it obviously involves
+a lot of “manual” labor. It depends on your point of view, your values and tastes,
+your education and experience, and your application domain, if you scream with
+joy or sorrow upon hearing such a thing.</p>
 
       </td>
       <td class=code>
