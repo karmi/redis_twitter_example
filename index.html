@@ -41,7 +41,8 @@
         </div>
         <p>This file contains a tutorial explaining core concepts of the <a href="http://redis.io/"><em>Redis</em></a>
 database, dressed as a fully working bash script. All the words in UPPERCASE are <em>Redis</em>
-built-in commands. All the words in lowercase are parameters for those commands.</p>
+built-in commands. All the words in lowercase are parameters for those commands. The
+<code>redis-cli</code> binary is aliased as <code>%</code> throughout the script.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -52,8 +53,8 @@ built-in commands. All the words in lowercase are parameters for those commands.
         <div class="pilwrap">
           <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
-        <p>The tutorial implements a simplified <em>Twitter</em> clone, loosely based on the now classic
-<a href="http://redis.io/topics/twitter-clone"><em>TwitterAlikeExample</em></a>
+        <p>The tutorial implements a much simplified <em>Twitter</em> “clone”, loosely based on the
+now classic <a href="http://redis.io/topics/twitter-clone"><em>TwitterAlikeExample</em></a>
 by <a href="http://twitter.com/antirez"><code>@antirez</code></a>.</p>
       </td>
       <td class=code>
@@ -80,7 +81,8 @@ by <a href="http://twitter.com/antirez"><code>@antirez</code></a>.</p>
           <a class="pilcrow" href="#section-6">&#182;</a>
         </div>
         <p><img src="http://github.com/favicon.ico" style="position:relative; top:2px">
-The full source for this tutorial is available at <a href="http://github.com/karmi/redis_twitter_example">http://github.com/karmi/redis_twitter_example</a>.</p>
+The full source code for this tutorial is available at
+<a href="http://github.com/karmi/redis_twitter_example">http://github.com/karmi/redis_twitter_example</a>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -102,15 +104,10 @@ The full source for this tutorial is available at <a href="http://github.com/kar
         <div class="pilwrap">
           <a class="pilcrow" href="#section-8">&#182;</a>
         </div>
-        <p>First, let&rsquo;s create some aliases for better code readability.</p>
+        <p>First, let&rsquo;s create some aliases for better code readability:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nb">shopt</span>    -s expand_aliases
-<span class="nb">alias    </span><span class="nv">t</span><span class="o">=</span><span class="s2">&quot;date +%H:%M&quot;</span>
-<span class="nb">export   </span><span class="nv">db</span><span class="o">=</span><span class="s2">&quot;13&quot;</span>
-<span class="nb">alias</span>    %<span class="o">=</span><span class="s2">&quot;redis-cli -n $db&quot;</span>
-<span class="k">function</span>  + <span class="o">()</span> <span class="o">{</span> <span class="nb">echo</span>; <span class="nb">echo</span> -e <span class="s2">&quot;# \033[1m$@\033[0m&quot;</span>; <span class="k">for </span>i in <span class="o">{</span>1..60<span class="o">}</span>; <span class="k">do </span><span class="nb">echo</span> -n <span class="s1">&#39;‾&#39;</span>; <span class="k">done</span>; <span class="nb">echo</span>; <span class="o">}</span>
-<span class="nb">unalias  </span>grep</pre></div>
+        <div class='highlight'><pre><span class="nb">shopt</span>    -s expand_aliases</pre></div>
       </td>
     </tr>
     <tr id='section-9'>
@@ -118,16 +115,60 @@ The full source for this tutorial is available at <a href="http://github.com/kar
         <div class="pilwrap">
           <a class="pilcrow" href="#section-9">&#182;</a>
         </div>
-        <p>Second, let&rsquo;s wipe the selected <em>Redis</em> database clean.</p>
+        <p>to get current time,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% FLUSHDB</pre></div>
+        <div class='highlight'><pre><span class="nb">alias    </span><span class="nv">t</span><span class="o">=</span><span class="s2">&quot;date +%H:%M&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-10'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>to define the <em>Redis</em> database used,</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">export   </span><span class="nv">db</span><span class="o">=</span><span class="s2">&quot;13&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>to simplify using the <code>redis-cli</code> command,</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">alias</span>    %<span class="o">=</span><span class="s2">&quot;redis-cli -n $db&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>and to simplify displaying notices in the terminal.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">function</span>  + <span class="o">()</span> <span class="o">{</span> <span class="nb">echo</span>; <span class="nb">echo</span> -e <span class="s2">&quot;# \033[1m$@\033[0m&quot;</span>; <span class="k">for </span>i in <span class="o">{</span>1..60<span class="o">}</span>; <span class="k">do </span><span class="nb">echo</span> -n <span class="s1">&#39;‾&#39;</span>; <span class="k">done</span>; <span class="nb">echo</span>; <span class="o">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>Second, let&rsquo;s wipe the selected <em>Redis</em> database clean.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% FLUSHDB</pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
         </div>
         <p>OK. We&rsquo;re ready to add some users to our “twitter”. We will use a <em>set</em> for storing users.</p>
       </td>
@@ -137,14 +178,14 @@ The full source for this tutorial is available at <a href="http://github.com/kar
 % SADD users B</pre></div>
       </td>
     </tr>
-    <tr id='section-11'>
+    <tr id='section-15'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-11">&#182;</a>
+          <a class="pilcrow" href="#section-15">&#182;</a>
         </div>
-        <p>Let&rsquo;s make user A follow user B. We will use a <em>set</em> for this, again.
-Notice the first place where we denormalize the data, storing both
-sides of the relationship in discrete sets.</p>
+        <p>Let&rsquo;s make user A follow user B. We will use a <em>set</em> for storing the relationship,
+again. Notice it&rsquo;s the first place where we denormalize the data, storing both
+sides of the relationship in separate sets.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>+ <span class="s2">&quot;User A follows user B&quot;</span>
@@ -152,10 +193,10 @@ sides of the relationship in discrete sets.</p>
 % SADD users:B:followers A</pre></div>
       </td>
     </tr>
-    <tr id='section-12'>
+    <tr id='section-16'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-12">&#182;</a>
+          <a class="pilcrow" href="#section-16">&#182;</a>
         </div>
         <p>We will add another user, C.</p>
       </td>
@@ -164,10 +205,10 @@ sides of the relationship in discrete sets.</p>
 % SADD users C</pre></div>
       </td>
     </tr>
-    <tr id='section-13'>
+    <tr id='section-17'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-13">&#182;</a>
+          <a class="pilcrow" href="#section-17">&#182;</a>
         </div>
         <p>B is quite popular, so C will follow him as well.</p>
       </td>
@@ -177,10 +218,10 @@ sides of the relationship in discrete sets.</p>
 % SADD users:B:followers C</pre></div>
       </td>
     </tr>
-    <tr id='section-14'>
+    <tr id='section-18'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-14">&#182;</a>
+          <a class="pilcrow" href="#section-18">&#182;</a>
         </div>
         <p>A follows nearly everybody, so let him follow C.</p>
       </td>
@@ -190,10 +231,10 @@ sides of the relationship in discrete sets.</p>
 % SADD users:C:followers A</pre></div>
       </td>
     </tr>
-    <tr id='section-15'>
+    <tr id='section-19'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-15">&#182;</a>
+          <a class="pilcrow" href="#section-19">&#182;</a>
         </div>
         <p>Now, let&rsquo;s have a look at the relationships we have here.
 We can see A is really not being followed by anyone.</p>
@@ -203,10 +244,10 @@ We can see A is really not being followed by anyone.</p>
 % SMEMBERS users:A:followers</pre></div>
       </td>
     </tr>
-    <tr id='section-16'>
+    <tr id='section-20'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-16">&#182;</a>
+          <a class="pilcrow" href="#section-20">&#182;</a>
         </div>
         <p>B, as said, is quite popular, and is being followed by both A and C.</p>
       </td>
@@ -215,10 +256,10 @@ We can see A is really not being followed by anyone.</p>
 % SMEMBERS users:B:followers</pre></div>
       </td>
     </tr>
-    <tr id='section-17'>
+    <tr id='section-21'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-17">&#182;</a>
+          <a class="pilcrow" href="#section-21">&#182;</a>
         </div>
         <p>And C is being followwed by A.</p>
       </td>
@@ -227,69 +268,17 @@ We can see A is really not being followed by anyone.</p>
 % SMEMBERS users:C:followers</pre></div>
       </td>
     </tr>
-    <tr id='section-18'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-18">&#182;</a>
-        </div>
-        <p>OK, it&rsquo;s time for B to tweet something.</p>
-
-<p>We will store the published time and message body directly in the message
-itself. In real world, we would just use JSON.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from B&quot;</span>
-+ <span class="s2">&quot;B publishes message &#39;$message&#39;&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-19'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-19">&#182;</a>
-        </div>
-        <p>We will see how “query-needs” based schema, often called “denormalization”
- in the RDBMS world really play here. We&rsquo;re optimizing for the maximum <strong>read
-performance</strong>.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
-    <tr id='section-20'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-20">&#182;</a>
-        </div>
-        <p>First, we have to push the message to the global timeline, possibly
-displayed on the “twitter” homepage. We will use a Redis <em>list</em>
-for storing the tweets.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-21'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-21">&#182;</a>
-        </div>
-        <p>Second, we will push the message to the B&rsquo;s own messages list.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% LPUSH users:B:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
-      </td>
-    </tr>
     <tr id='section-22'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-22">&#182;</a>
         </div>
-        <p>And, most importantly, third, we have to push the message into
-the “inbox” of every user following B, which is A and C in our case.
-This will be a bit more tricky.</p>
+        <p>It&rsquo;s quite easy to display statistics such as “which users follow A and C”
+in common:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Who is followed by both A and C?&quot;</span>
+% SINTER users:A:following users:C:following</pre></div>
       </td>
     </tr>
     <tr id='section-23'>
@@ -297,10 +286,11 @@ This will be a bit more tricky.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-23">&#182;</a>
         </div>
-        <p>First, we have to get a list of all followers of B.</p>
+        <p>or display those of C&rsquo;s followers who are not being followed back:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% SMEMBERS users:B:followers | <span class="se">\</span></pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Who is not followed back by C?&quot;</span>
+% SDIFF users:C:followers users:C:following</pre></div>
       </td>
     </tr>
     <tr id='section-24'>
@@ -308,20 +298,100 @@ This will be a bit more tricky.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-24">&#182;</a>
         </div>
-        <p>Then, we have to iterate over this list, and push B&rsquo;s message
-into the timeline of each user.</p>
+        <p>OK, it&rsquo;s time for B to tweet something. We&rsquo;ll be storing the message in
+a corresponding variable.</p>
+
+<p>We will store the published time and message body directly in the message
+itself. (In real world, we would most probably use JSON and not some crazy
+custom serialization format, obviously.)</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
-<span class="k">done</span></pre></div>
+        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from B&quot;</span>
++ <span class="s2">&quot;B publishes message &#39;$message&#39;&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-25'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-25">&#182;</a>
+        </div>
+        <p>We will see how “query-needs” based schema, often called “denormalization”
+ in the RDBMS world, really plays here.</p>
+
+<p>We&rsquo;re optimizing for the maximum <strong>read performance</strong>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-26'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-26">&#182;</a>
+        </div>
+        <p>First, we have to push the message to the global timeline, possibly
+displayed on the “twitter” homepage. We will use a Redis <em>list</em>
+for storing the tweets: that will allow us to efficiently get
+parts of the list, trim its size when needed, and the messages
+will be automatically ordered by the time of publication.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-27'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-27">&#182;</a>
+        </div>
+        <p>Second, we will push the message to the B&rsquo;s own timeline.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% LPUSH users:B:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-28'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-28">&#182;</a>
+        </div>
+        <p>And, most importantly, third, we have to push the message into
+the timleine, or “inbox” of every user following B, which is A and C in our case.
+This will be a bit more tricky.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-29'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-29">&#182;</a>
+        </div>
+        <p>First, we have to get a list of all followers of B.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% SMEMBERS users:B:followers | <span class="se">\</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-30'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-30">&#182;</a>
+        </div>
+        <p>Then, we have to iterate over this list, and push B&rsquo;s message
+into the timeline of each relevant user.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">while </span><span class="nb">read </span>u; <span class="k">do</span>
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
+<span class="k">done</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-31'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-31">&#182;</a>
         </div>
         <p>Now, let C tweet something, as well.</p>
       </td>
@@ -330,86 +400,15 @@ into the timeline of each user.</p>
 + <span class="s2">&quot;C publishes message &#39;$message&#39;&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-26'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-26">&#182;</a>
-        </div>
-        <p>We have to run through the loop once again.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
-    <tr id='section-27'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-27">&#182;</a>
-        </div>
-        <p>1) push the message to the global timeline,</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-28'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-28">&#182;</a>
-        </div>
-        <p>2) push the message to C&rsquo;s own timeline,</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% LPUSH users:C:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-29'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-29">&#182;</a>
-        </div>
-        <p>3) push the message to C&rsquo;s followers timelines</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% SMEMBERS users:C:followers | <span class="se">\</span>
-<span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
-<span class="k">done</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-30'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-30">&#182;</a>
-        </div>
-        <p>And finally, let A tweet something as well. We know the drill, now.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from A&quot;</span>
-+ <span class="s2">&quot;A publishes message &#39;$message&#39;&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-31'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-31">&#182;</a>
-        </div>
-        <p>We have to push the message to:</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
     <tr id='section-32'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-32">&#182;</a>
         </div>
-        <p>1) the global timeline,</p>
+        <p>We have to run through the loop once again:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-33'>
@@ -417,10 +416,10 @@ into the timeline of each user.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-33">&#182;</a>
         </div>
-        <p>2) A&rsquo;s own timeline,</p>
+        <p>1) push the message to the global timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH users:A:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
+        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-34'>
@@ -428,14 +427,10 @@ into the timeline of each user.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-34">&#182;</a>
         </div>
-        <p>3) all A&rsquo;s followers timeline (empty in this case).</p>
+        <p>2) push the message to C&rsquo;s own timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% SMEMBERS users:A:followers | <span class="se">\</span>
-<span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
-<span class="k">done</span></pre></div>
+        <div class='highlight'><pre>% LPUSH users:C:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-35'>
@@ -443,10 +438,13 @@ into the timeline of each user.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-35">&#182;</a>
         </div>
-        <p>Now would be the good time to display some tweets.</p>
+        <p>3) and push the message to C&rsquo;s followers timelines</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre>% SMEMBERS users:C:followers | <span class="se">\</span>
+<span class="k">while </span><span class="nb">read </span>u; <span class="k">do</span>
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
+<span class="k">done</span></pre></div>
       </td>
     </tr>
     <tr id='section-36'>
@@ -454,13 +452,11 @@ into the timeline of each user.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-36">&#182;</a>
         </div>
-        <p> Let&rsquo;s display A&rsquo;s timeline, trimming it to 10 messages.
-We can see it contains two tweets, from C and B, in reversed
-order they were published: C&rsquo;s tweet comes first.</p>
+        <p>Finally, let A tweet something as well. We know the drill, by now.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;A&#39;s timeline:&quot;</span>
-% LRANGE users:A:timeline 0 9</pre></div>
+        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from A&quot;</span>
++ <span class="s2">&quot;A publishes message &#39;$message&#39;&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-37'>
@@ -468,11 +464,10 @@ order they were published: C&rsquo;s tweet comes first.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-37">&#182;</a>
         </div>
-        <p>How does B&rsquo;s timeline look like? It contains just his own tweet.</p>
+        <p>We have to push the message to:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;B&#39;s timeline:&quot;</span>
-% LRANGE users:B:timeline 0 9</pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-38'>
@@ -480,12 +475,10 @@ order they were published: C&rsquo;s tweet comes first.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-38">&#182;</a>
         </div>
-        <p>And C&rsquo;s timeline? It contains his own tweet, first, and an earlier
-tweet from B, second.</p>
+        <p>1) the global timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;C&#39;s timeline:&quot;</span>
-% LRANGE users:C:timeline 0 9</pre></div>
+        <div class='highlight'><pre>% LPUSH global:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-39'>
@@ -493,11 +486,10 @@ tweet from B, second.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-39">&#182;</a>
         </div>
-        <p>We can just as easily display the global timeline.</p>
+        <p>2) A&rsquo;s own timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline:&quot;</span>
-% LRANGE global:timeline 0 9</pre></div>
+        <div class='highlight'><pre>% LPUSH users:A:timeline <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-40'>
@@ -505,13 +497,13 @@ tweet from B, second.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-40">&#182;</a>
         </div>
-        <p>Of course, we are esentially duplicating the same message in all the user
-timeline. This way, we would eat out RAM very quickly. How much memory
-does our “twitter” use now?</p>
+        <p>3) all A&rsquo;s followers timeline (empty in this case).</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;Memory usage:&quot;</span>
-% info | grep <span class="s2">&quot;used_memory_human&quot;</span></pre></div>
+        <div class='highlight'><pre>% SMEMBERS users:A:followers | <span class="se">\</span>
+<span class="k">while </span><span class="nb">read </span>u; <span class="k">do</span>
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$message&quot;</span>
+<span class="k">done</span></pre></div>
       </td>
     </tr>
     <tr id='section-41'>
@@ -519,9 +511,7 @@ does our “twitter” use now?</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-41">&#182;</a>
         </div>
-        <p>We can de-duplicate the messages by storing them by ID, and storing
-only those IDs in user timelines, instead of full messages.
-Let&rsquo;s have a shot at that.</p>
+        <p>Now would be a good time to display some tweets.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -532,10 +522,14 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-42">&#182;</a>
         </div>
-        <p>OK, let&rsquo;s clear everything first.</p>
+        <p> Let&rsquo;s display A&rsquo;s timeline, trimming it to 10 messages.
+We can see it contains three tweets: from A himself, C, and B,
+in the reversed order they were published, effectively
+making it a <a href="http://en.wikipedia.org/wiki/LIFO">LIFO queue</a>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% FLUSHDB</pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;A&#39;s timeline:&quot;</span>
+% LRANGE users:A:timeline 0 9</pre></div>
       </td>
     </tr>
     <tr id='section-43'>
@@ -543,17 +537,93 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-43">&#182;</a>
         </div>
-        <p>Now, let&rsquo;s again add some users.</p>
+        <p>How does B&rsquo;s timeline look like? It contains just his own tweet.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;Adding users A, B and C&quot;</span>
-% SADD users A B C</pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;B&#39;s timeline:&quot;</span>
+% LRANGE users:B:timeline 0 9</pre></div>
       </td>
     </tr>
     <tr id='section-44'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-44">&#182;</a>
+        </div>
+        <p>And C&rsquo;s timeline? It contains his own tweet, first, and an earlier
+tweet from B, second.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>+ <span class="s2">&quot;C&#39;s timeline:&quot;</span>
+% LRANGE users:C:timeline 0 9</pre></div>
+      </td>
+    </tr>
+    <tr id='section-45'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-45">&#182;</a>
+        </div>
+        <p>We can just as easily display the global timeline, trimming it to
+just the single last tweet from A.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (last message):&quot;</span>
+% LRANGE global:timeline 0 0</pre></div>
+      </td>
+    </tr>
+    <tr id='section-46'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-46">&#182;</a>
+        </div>
+        <p>Of course, we are esentially duplicating the same message in all the user
+timelines. This way, we would eat out RAM very quickly. How much memory
+does our “twitter” use now?</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Memory usage:&quot;</span>
+% info | <span class="s1">&#39;grep&#39;</span> <span class="s2">&quot;used_memory_human&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-47'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-47">&#182;</a>
+        </div>
+        <p>We can de-duplicate the messages by storing them by ID, and storing
+only those IDs in user timelines, instead of full messages.
+Let&rsquo;s have a shot at that.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-48'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-48">&#182;</a>
+        </div>
+        <p>OK, let&rsquo;s clear everything first.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% FLUSHDB</pre></div>
+      </td>
+    </tr>
+    <tr id='section-49'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-49">&#182;</a>
+        </div>
+        <p>Now, let&rsquo;s add some users, again, this time in batch.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Adding users A, B and C&quot;</span>
+% SADD users A B C</pre></div>
+      </td>
+    </tr>
+    <tr id='section-50'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-50">&#182;</a>
         </div>
         <p>Let&rsquo;s add the relationships:</p>
 
@@ -573,82 +643,15 @@ Let&rsquo;s have a shot at that.</p>
 % SADD users:B:followers C</pre></div>
       </td>
     </tr>
-    <tr id='section-45'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-45">&#182;</a>
-        </div>
-        <p>Let B tweet something.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from B&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-46'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-46">&#182;</a>
-        </div>
-        <p>We will store every tweet in under a separate key, with unique ID.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
-    <tr id='section-47'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-47">&#182;</a>
-        </div>
-        <p>Let&rsquo;s get a unique, “auto-incrementing” ID, saving it in a <code>$id</code> variable.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span>
-+ <span class="s2">&quot;B publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-48'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-48">&#182;</a>
-        </div>
-        <p>Let&rsquo;s store the message content under a key.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-49'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-49">&#182;</a>
-        </div>
-        <p>Can we get it back? We can.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>% GET tweets:1</pre></div>
-      </td>
-    </tr>
-    <tr id='section-50'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-50">&#182;</a>
-        </div>
-        <p>Now, we have to push the ID to all the timelines, as in the previous implementation.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre></pre></div>
-      </td>
-    </tr>
     <tr id='section-51'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-51">&#182;</a>
         </div>
-        <p>The global timeline,</p>
+        <p>Let B tweet something, again.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
+        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from B&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-52'>
@@ -656,10 +659,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-52">&#182;</a>
         </div>
-        <p>B&rsquo;s own timeline,</p>
+        <p>We will store every tweet under a separate key, with a unique ID.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH users:B:timeline <span class="nv">$id</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-53'>
@@ -667,14 +670,12 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-53">&#182;</a>
         </div>
-        <p>all B&rsquo;s followers timeline.</p>
+        <p>We&rsquo;ll get a unique, “auto-incrementing” ID from <em>Redis</em>,
+saving it in a <code>$id</code> variable.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% SMEMBERS users:B:followers | <span class="se">\</span>
-<span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
-<span class="k">done</span></pre></div>
+        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span>
++ <span class="s2">&quot;B publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-54'>
@@ -682,10 +683,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-54">&#182;</a>
         </div>
-        <p>We should now have the tweet ID stored in relevant timelines.</p>
+        <p>Let&rsquo;s store the message content under a separate key, using the ID.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre>% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-55'>
@@ -693,11 +694,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-55">&#182;</a>
         </div>
-        <p>Let&rsquo;s have a look on the global one:</p>
+        <p>Can we get it back? Sure thing.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (IDs):&quot;</span>
-% LRANGE global:timeline 0 -1</pre></div>
+        <div class='highlight'><pre>% GET tweets:1</pre></div>
       </td>
     </tr>
     <tr id='section-56'>
@@ -705,12 +705,10 @@ Let&rsquo;s have a shot at that.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-56">&#182;</a>
         </div>
-        <p>We get back only the IDs. When we want to retrieve the messages itself, we have
-to fetch them from the relevant keys. It&rsquo;s kinda tricky with the command
-line client, but doable.</p>
+        <p>Now, we have to push the ID to all the timelines, as in the previous implementation:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (messages):&quot;</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-57'>
@@ -718,10 +716,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-57">&#182;</a>
         </div>
-        <p>We will simply replace every numeric ID with the corresponding key in the form <code>tweets:&lt;ID&gt;</code>&hellip;</p>
+        <p>the global timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nv">tweet_ids</span><span class="o">=</span><span class="k">$(</span> % LRANGE global:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
+        <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
     <tr id='section-58'>
@@ -729,10 +727,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-58">&#182;</a>
         </div>
-        <p>&hellip; and feed it to the <a href="http://redis.io/commands/mget"><code>MGET</code></a> command.</p>
+        <p>B&rsquo;s own timeline,</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% MGET <span class="nv">$tweet_ids</span></pre></div>
+        <div class='highlight'><pre>% LPUSH users:B:timeline <span class="nv">$id</span></pre></div>
       </td>
     </tr>
     <tr id='section-59'>
@@ -740,10 +738,13 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-59">&#182;</a>
         </div>
-        <p>Now, let C tweet something, again.</p>
+        <p>all the B&rsquo;s followers timelines.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre>% SMEMBERS users:B:followers | <span class="se">\</span>
+<span class="k">while </span><span class="nb">read </span>u; <span class="k">do</span>
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
+<span class="k">done</span></pre></div>
       </td>
     </tr>
     <tr id='section-60'>
@@ -751,10 +752,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-60">&#182;</a>
         </div>
-        <p>Let&rsquo;s get some ID, again</p>
+        <p>We should now have the tweet ID stored in all relevant timelines.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-61'>
@@ -762,12 +763,11 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-61">&#182;</a>
         </div>
-        <p>Let&rsquo;s store the message content under a key, again.</p>
+        <p>Let&rsquo;s have a look at the global one:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from C&quot;</span>
-+ <span class="s2">&quot;C publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span>
-% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (IDs):&quot;</span>
+% LRANGE global:timeline 0 -1</pre></div>
       </td>
     </tr>
     <tr id='section-62'>
@@ -775,10 +775,11 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-62">&#182;</a>
         </div>
-        <p>Now, we have to push the ID to all the timelines, again.</p>
+        <p>We get back only the IDs. When we want to retrieve the messages itself, we have
+to fetch them from the relevant keys:</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline (messages):&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-63'>
@@ -786,10 +787,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-63">&#182;</a>
         </div>
-        <p>The global timeline,</p>
+        <p>We will simply replace every numeric ID with the corresponding key in the form <code>tweets:&lt;ID&gt;</code>&hellip;</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
+        <div class='highlight'><pre><span class="nv">tweet_ids</span><span class="o">=</span><span class="k">$(</span> % LRANGE global:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
     <tr id='section-64'>
@@ -797,10 +798,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-64">&#182;</a>
         </div>
-        <p>C&rsquo;s own timeline,</p>
+        <p>&hellip; and feed it to the <a href="http://redis.io/commands/mget"><code>MGET</code></a> command.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% LPUSH users:C:timeline <span class="nv">$id</span></pre></div>
+        <div class='highlight'><pre>% MGET <span class="nv">$tweet_ids</span></pre></div>
       </td>
     </tr>
     <tr id='section-65'>
@@ -808,14 +809,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-65">&#182;</a>
         </div>
-        <p>all C&rsquo;s followers timeline.</p>
+        <p>Now, let C tweet something, again.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>% SMEMBERS users:C:followers | <span class="se">\</span>
-<span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
-<span class="k">done</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-66'>
@@ -823,23 +820,10 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-66">&#182;</a>
         </div>
-        <p>And finally, let&rsquo;s repeat everything for A as well.</p>
+        <p>We need to get some ID.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span>
-<span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from A&quot;</span>
-+ <span class="s2">&quot;A publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span>
-% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span>
-
-% LPUSH global:timeline <span class="nv">$id</span>
-
-% LPUSH users:A:timeline <span class="nv">$id</span>
-
-% SMEMBERS users:A:followers | <span class="se">\</span>
-<span class="k">while </span><span class="nb">read </span>u
-<span class="k">do</span>
-  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
-<span class="k">done</span></pre></div>
+        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-67'>
@@ -847,10 +831,12 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-67">&#182;</a>
         </div>
-        <p> Now would be the good time to display the timelines, again.</p>
+        <p>We&rsquo;ll store the message content under a separate key, again.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from C&quot;</span>
++ <span class="s2">&quot;C publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span>
+% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-68'>
@@ -858,9 +844,7 @@ line client, but doable.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-68">&#182;</a>
         </div>
-        <p>Note, that we cannot simply pull messages from the timelines,
-since we are storing only IDs. We have to feed the fetched
-IDs to <code>MGET</code> again.</p>
+        <p>Now, we have to push the ID to all the relevant timelines, again:</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -871,6 +855,98 @@ IDs to <code>MGET</code> again.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-69">&#182;</a>
         </div>
+        <p>the global timeline,</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% LPUSH global:timeline <span class="nv">$id</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-70'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-70">&#182;</a>
+        </div>
+        <p>C&rsquo;s own timeline,</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% LPUSH users:C:timeline <span class="nv">$id</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-71'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-71">&#182;</a>
+        </div>
+        <p>and all the C&rsquo;s followers timelines.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>% SMEMBERS users:C:followers | <span class="se">\</span>
+<span class="k">while </span><span class="nb">read </span>u; <span class="k">do</span>
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
+<span class="k">done</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-72'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-72">&#182;</a>
+        </div>
+        <p>And finally, let&rsquo;s repeat everything for A as well:</p>
+
+<ol>
+<li>Getting the unique ID</li>
+<li>Storing the message</li>
+<li>Pushing it to the global timeline</li>
+<li>Pushing it to the author&rsquo;s timeline</li>
+<li>Pushing it to the author followers' timelines</li>
+</ol>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nv">id</span><span class="o">=</span><span class="s2">&quot;$( % INCR tweets:next_id )&quot;</span>
+<span class="nv">message</span><span class="o">=</span><span class="s2">&quot;$(t);Message from A&quot;</span>
++ <span class="s2">&quot;A publishes message &#39;$message&#39; with ID &#39;$id&#39;&quot;</span>
+
+% SET tweets:<span class="nv">$id</span> <span class="s2">&quot;$message&quot;</span>
+
+% LPUSH global:timeline <span class="nv">$id</span>
+
+% LPUSH users:A:timeline <span class="nv">$id</span>
+
+% SMEMBERS users:A:followers | <span class="se">\</span>
+<span class="k">while </span><span class="nb">read </span>u;do
+  % LPUSH users:<span class="nv">$u</span>:timeline <span class="s2">&quot;$id&quot;</span>
+<span class="k">done</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-73'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-73">&#182;</a>
+        </div>
+        <p> Now would be a good time to display the timelines, again.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-74'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-74">&#182;</a>
+        </div>
+        <p>Note, that we cannot simply pull messages from the timelines,
+since we are storing only IDs. We have to feed the fetched
+IDs to the <code>MGET</code> command, as we'va seen a while ago.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-75'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-75">&#182;</a>
+        </div>
         <p>A&rsquo;s timeline.</p>
       </td>
       <td class=code>
@@ -878,10 +954,10 @@ IDs to <code>MGET</code> again.</p>
 % MGET <span class="k">$(</span> % LRANGE users:A:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-70'>
+    <tr id='section-76'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-70">&#182;</a>
+          <a class="pilcrow" href="#section-76">&#182;</a>
         </div>
         <p>B&rsquo;s timeline.</p>
       </td>
@@ -890,10 +966,10 @@ IDs to <code>MGET</code> again.</p>
 % MGET <span class="k">$(</span> % LRANGE users:B:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-71'>
+    <tr id='section-77'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-71">&#182;</a>
+          <a class="pilcrow" href="#section-77">&#182;</a>
         </div>
         <p>C&rsquo;s timeline.</p>
       </td>
@@ -902,36 +978,36 @@ IDs to <code>MGET</code> again.</p>
 % MGET <span class="k">$(</span> % LRANGE users:C:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span></pre></div>
       </td>
     </tr>
-    <tr id='section-72'>
+    <tr id='section-78'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-72">&#182;</a>
+          <a class="pilcrow" href="#section-78">&#182;</a>
         </div>
-        <p>Global timeline.</p>
+        <p>The global timeline.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>+ <span class="s2">&quot;Global timeline:&quot;</span>
 % MGET <span class="k">$(</span> % LRANGE global:timeline 0 9 | sed <span class="s1">&#39;s/^/tweets:/&#39;</span> <span class="k">)</span> </pre></div>
       </td>
     </tr>
-    <tr id='section-73'>
+    <tr id='section-79'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-73">&#182;</a>
+          <a class="pilcrow" href="#section-79">&#182;</a>
         </div>
         <p>How does our RAM usage look now? You can see it&rsquo;s actually <em>larger</em> then
-in the previous case, most probably because we&rsquo;re using a larger pool
-of keys now. There&rsquo;s no free lunch in computer science.</p>
+in the previous case, most probably because we&rsquo;re using a slightly
+larger pool of keys now. There&rsquo;s no free lunch in computer science.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>+ <span class="s2">&quot;Memory usage:&quot;</span>
-% info | grep <span class="s2">&quot;used_memory_human&quot;</span></pre></div>
+% info | <span class="s1">&#39;grep&#39;</span> <span class="s2">&quot;used_memory_human&quot;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-74'>
+    <tr id='section-80'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-74">&#182;</a>
+          <a class="pilcrow" href="#section-80">&#182;</a>
         </div>
         <p>You may wonder, now, how we display the count of tweets for specific user,
 for instance. Actually, there&rsquo;s no way to do that.</p>
