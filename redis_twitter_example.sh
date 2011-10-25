@@ -398,19 +398,29 @@ done
 
 # ---------------------------------------------------------------------------------------
 
-# You may wonder, now, how we display the count of tweets for specific user,
+# You may wonder, now, how we display the count of tweets authored by a specific user,
 # for instance. Actually, there's no way to do that.
 #
-# One solution would be to continue with the “query-based” schema, and
+# One solution would be to continue with the simple “query-based” schema, and
 # just keep track of counts manually, in a counter such as `users:A:tweets:count`.
 #
-# Another solution would be to use [_sorted sets_](http://redis.io/commands#sorted_set)
-# for tweets, with one set per user, using timestamp as the score.
+# Another solution would be to use a [_sorted set_](http://redis.io/commands#sorted_set)
+# for user's own tweets, one set per user, using timestamp as the score.
 #
-# But that would shift the perspective to “data-based” schema, and we would have to walk
-# through all the sets of all the followers when displaying user's timeline, using
-# [`ZREVRANGEBYSCORE`](http://redis.io/commands/zrevrangebyscore) to get a limited set of IDs,
-# and then perform a [`ZUNIONSTORE`](http://redis.io/commands/zunionstore)
-# to store them in an easily accessible set, sorted by timestamp.
+# Naturally, we would want to keep the “query-based” perspective when modelling the
+# data, so we would store the messages (or their IDS) in additional user “inboxes” anyway.
+# If we'd use sorted sets instead of lists, it would allow us interesting operations,
+# such as intersections of their timelines, eg. “display timelines of all your followers”.
 #
-# And that would certainly be a _very_ expensive set of operations.
+# The thing to keep in mind at all times is that we don't have any efficient technique
+# to query data based on _value_. There's no `SELECT ... WHERE column = 'something'`.
+#
+# As you may know, a “traditional database” uses and _index_ on this column to be able
+# to efficiently perform such a query, without doing a full table scan.
+#
+# In fact, those “de-normalized” data are just _indices_ in the traditional database
+# sense. We're managing these _indices_ manually, and deciding upon their design and
+# implementation ourselves. While absolutely transparent to us, it obviously involves
+# a lot of “manual” labor. It depends on your point of view, your values and tastes,
+# your education and experience, and your application domain, if you scream with
+# joy or sorrow upon hearing that.
