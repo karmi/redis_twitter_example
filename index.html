@@ -1031,17 +1031,17 @@ larger pool of keys now. There&rsquo;s no free lunch in computer science.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-82">&#182;</a>
         </div>
-        <p>You may wonder, now, how we display the count of tweets for specific user,
+        <p>You may wonder, now, how we display the count of tweets authored by a specific user,
 for instance. Actually, there&rsquo;s no way to do that.</p>
 
 <p>One solution would be to continue with the simple “query-based” schema, and
 just keep track of counts manually, in a counter such as <code>users:A:tweets:count</code>.</p>
 
 <p>Another solution would be to use a <a href="http://redis.io/commands#sorted_set"><em>sorted set</em></a>
-for user&rsquo;s timeline, one set per user, using timestamp as the score.</p>
+for user&rsquo;s own tweets, one set per user, using timestamp as the score.</p>
 
 <p>Naturally, we would want to keep the “query-based” perspective when modelling the
-data, so we would store the messages (or their IDS) in user “inboxes” anyway.
+data, so we would store the messages (or their IDS) in additional user “inboxes” anyway.
 If we&rsquo;d use sorted sets instead of lists, it would allow us interesting operations,
 such as intersections of their timelines, eg. “display timelines of all your followers”.</p>
 
