@@ -134,7 +134,7 @@ message="$(t);Message from B"
 % LPUSH users:B:timeline "$message"
 
 # And, most importantly, third, we have to push the message into
-# the timleine, or “inbox” of every user following B, which is A and C in our case.
+# the timeline, or “inbox” of every user following B, which is A and C in our case.
 # This will be a bit more tricky.
 
 # First, we have to get a list of all followers of B.
@@ -415,10 +415,10 @@ done
 # The thing to keep in mind at all times is that we don't have any efficient technique
 # to query data based on _value_. There's no `SELECT ... WHERE column = 'something'`.
 #
-# As you may know, a “traditional database” uses and _index_ on this column to be able
-# to efficiently perform such a query, without doing a full table scan.
+# As you may know, a “traditional database” uses an _index_ on this column to be able
+# to efficiently perform such query, without doing a full table scan.
 #
-# In fact, those “de-normalized” data are just _indices_ in the traditional database
+# In fact, our “de-normalized” data are just _indices_ in the traditional database
 # sense. We're managing these _indices_ manually, and deciding upon their design and
 # implementation ourselves. While absolutely transparent to us, it obviously involves
 # a lot of “manual” labor. It depends on your point of view, your values and tastes,
