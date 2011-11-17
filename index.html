@@ -356,7 +356,7 @@ will be automatically ordered by the time of publication.</p>
           <a class="pilcrow" href="#section-28">&#182;</a>
         </div>
         <p>And, most importantly, third, we have to push the message into
-the timleine, or “inbox” of every user following B, which is A and C in our case.
+the timeline, or “inbox” of every user following B, which is A and C in our case.
 This will be a bit more tricky.</p>
       </td>
       <td class=code>
@@ -1048,10 +1048,10 @@ such as intersections of their timelines, eg. “display timelines of all your f
 <p>The thing to keep in mind at all times is that we don&rsquo;t have any efficient technique
 to query data based on <em>value</em>. There&rsquo;s no <code>SELECT &hellip; WHERE column = &lsquo;something&rsquo;</code>.</p>
 
-<p>As you may know, a “traditional database” uses and <em>index</em> on this column to be able
-to efficiently perform such a query, without doing a full table scan.</p>
+<p>As you may know, a “traditional database” uses an <em>index</em> on this column to be able
+to efficiently perform such query, without doing a full table scan.</p>
 
-<p>In fact, those “de-normalized” data are just <em>indices</em> in the traditional database
+<p>In fact, our “de-normalized” data are just <em>indices</em> in the traditional database
 sense. We&rsquo;re managing these <em>indices</em> manually, and deciding upon their design and
 implementation ourselves. While absolutely transparent to us, it obviously involves
 a lot of “manual” labor. It depends on your point of view, your values and tastes,
